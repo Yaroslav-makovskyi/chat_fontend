@@ -1,20 +1,22 @@
 {
   "name": "chat.frontend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "start": "node build/main.js",
-    "dev": "tsc && node build/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "scss": "sass scss:css --no-source-map --style=expanded",
+    "scss:watch": "sass scss:css --no-source-map --style=expanded --watch",
+    "format": "prettier --write \"src/**/*\"",
+    "format:check": "prettier --check \"src/**/*\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^24.3.1",
+    "prettier": "^3.6.2",
+    "sass": "^1.92.1",
     "typescript": "^5.9.2"
   }
 }

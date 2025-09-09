@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <div class="max-w-4xl mx-auto h-screen flex flex-col">
+    <div id="chatContainer" class="max-w-4xl mx-auto h-screen flex flex-col">
         <!-- Заголовок чата -->
         <div class="bg-white shadow-lg border-b border-gray-200 p-4">
             <div class="flex items-center space-x-3">
@@ -17,132 +17,31 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-semibold text-gray-800">Общий чат</h1>
-                    <p class="text-sm text-gray-500">5 участников онлайн</p>
                 </div>
             </div>
         </div>
 
         <!-- Область сообщений -->
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-            <!-- Сообщение от другого пользователя -->
-            <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-sm font-medium">А</span>
-                </div>
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="font-medium text-gray-800">Анна</span>
-                        <span class="text-xs text-gray-500">14:32</span>
-                    </div>
-                    <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-2 max-w-md">
-                        <p class="text-gray-800">Привет всем! Как дела? 👋</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Мое сообщение -->
-            <div class="flex items-start space-x-3 justify-end">
-                <div class="flex-1 flex flex-col items-end">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="text-xs text-gray-500">14:33</span>
-                        <span class="font-medium text-gray-800">Вы</span>
-                    </div>
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl rounded-tr-md px-4 py-2 max-w-md">
-                        <p class="text-white">Привет! Все отлично, работаю над новым проектом 🚀</p>
-                    </div>
-                </div>
-                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-sm font-medium">Я</span>
-                </div>
-            </div>
-
-            <!-- Сообщение от другого пользователя -->
-            <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-sm font-medium">М</span>
-                </div>
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="font-medium text-gray-800">Максим</span>
-                        <span class="text-xs text-gray-500">14:35</span>
-                    </div>
-                    <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-2 max-w-md">
-                        <p class="text-gray-800">Круто! А что за проект? Можешь рассказать подробнее?</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Еще одно мое сообщение -->
-            <div class="flex items-start space-x-3 justify-end">
-                <div class="flex-1 flex flex-col items-end">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="text-xs text-gray-500">14:36</span>
-                        <span class="font-medium text-gray-800">Вы</span>
-                    </div>
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl rounded-tr-md px-4 py-2 max-w-md">
-                        <p class="text-white">Разрабатываю веб-приложение для управления задачами. Использую современные технологии ⚡</p>
-                    </div>
-                </div>
-                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-sm font-medium">Я</span>
-                </div>
-            </div>
-
-            <!-- Сообщение от третьего пользователя -->
-            <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-sm font-medium">Е</span>
-                </div>
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="font-medium text-gray-800">Елена</span>
-                        <span class="text-xs text-gray-500">14:38</span>
-                    </div>
-                    <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-2 max-w-md">
-                        <p class="text-gray-800">Звучит интересно! Удачи с проектом! 💪</p>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Поле ввода сообщения -->
         <div class="bg-white border-t border-gray-200 p-4">
             <!-- Выбор пользователя -->
             <div class="mb-3">
-                <label class="text-sm font-medium text-gray-700 mb-2 block">Писать от имени:</label>
-                <div class="flex flex-wrap gap-2 mb-2" id="userButtons">
-                    <button onclick="selectUser('Вы', 'blue')" id="user-Вы" class="user-btn active px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white">
-                        Вы
-                    </button>
-                    <button onclick="selectUser('Анна', 'green')" id="user-Анна" class="user-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300">
-                        Анна
-                    </button>
-                    <button onclick="selectUser('Максим', 'purple')" id="user-Максим" class="user-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300">
-                        Максим
-                    </button>
-                    <button onclick="selectUser('Елена', 'orange')" id="user-Елена" class="user-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300">
-                        Елена
-                    </button>
-                    <button onclick="selectUser('Дмитрий', 'red')" id="user-Дмитрий" class="user-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300">
-                        Дмитрий
-                    </button>
-                </div>
+               
+                
                 
                 <!-- Добавление нового пользователя -->
                 <div class="flex items-center space-x-2">
                     <input 
                         type="text" 
-                        id="newUserInput"
+                        id="usernameInput"
                         placeholder="Введите имя нового пользователя..."
                         class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         maxlength="20"
                     >
-                    <button 
-                        onclick="addNewUser()"
-                        class="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors"
-                    >
-                        + Добавить
-                    </button>
+                    
                 </div>
             </div>
             
@@ -154,15 +53,11 @@
                         placeholder="Введите сообщение..."
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                    <button 
-                        onclick="attachFile()"
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                        📎
-                    </button>
+                    
                 </div>
                 <button 
-                    onclick="sendMessage()"
+                    id="sendBtn"
+                   
                     class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                     Отправить

@@ -1,16 +1,51 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chatContainer = document.getElementById("chatContainer");
-  const messagesContainer = document.getElementById("messagesContainer");
-  const usernameInput = document.getElementById("usernameInput");
-  const messageInput = document.getElementById("messageInput");
+  const usernameInput = document.getElementById(
+    "usernameInput",
+  ) as HTMLInputElement;
+  const messageInput = document.getElementById(
+    "messageInput",
+  ) as HTMLInputElement;
   const sendBtn = document.getElementById("sendBtn");
 
   if (chatContainer && usernameInput && messageInput && sendBtn) {
     setInterval(async () => {
       const res = await fetch("http://46.101.114.148:3000/chat/messages");
       const json = await res.json();
-      console.log(json);
+      chatContainer.innerHTML = json
+        .map((mesObj: any) => {
+          return `
+          <div class="flex items-start space-x-3">
+                  <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span class="text-white text-sm font-medium">М</span>
+                  </div>
+                  <div class="flex-1">
+                      <div class="flex items-center space-x-2 mb-1">
+                          <span class="font-medium text-gray-800">${mesObj.username}</span>
+                          <span class="text-xs text-gray-500"></span>
+                      </div>
+                      <div class="bg-gray-100 rounded-2xl rounded-tl-md px-4 py-2 max-w-md">
+                          <p class="text-gray-800">${mesObj.message}</p>
+                      </div>
+                  </div>
+              </div>`;
+        })
+        .join("\n");
     }, 1000);
+
+    sendBtn.addEventListener("click", async () => {
+      await fetch("http://46.101.114.148:3000/chat/message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: "temporary-id-1",
+          username: usernameInput.value,
+          message: messageInput.value,
+        }),
+      });
+    });
   }
 });
 

@@ -9,7 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const sendBtn = document.getElementById("sendBtn");
 
   if (chatContainer && usernameInput && messageInput && sendBtn) {
-    setInterval(async () => {
+    const isAtDown = () =>
+      chatContainer.scrollTop === chatContainer.scrollHeight;
+
+    const scrollToDown = () => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    };
+
+    const loadChat = async () => {
       const res = await fetch("http://46.101.114.148:3000/chat/messages");
       const json = await res.json();
       chatContainer.innerHTML = json
@@ -31,9 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>`;
         })
         .join("\n");
-    }, 1000);
 
-    sendBtn.addEventListener("click", async () => {
+        if (isAtDown()) {
+          scrollToDown()
+        }
+    };
+
+    loadChat();
+    setInterval(loadChat, 1000);
+
+    const sendMessage = async () => {
+      if (!usernameInput.value || !messageInput.value) {
+        return;
+      }
       await fetch("http://46.101.114.148:3000/chat/message", {
         method: "POST",
         headers: {
@@ -45,6 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
           message: messageInput.value,
         }),
       });
+      messageInput.value = "";
+      messageInput.focus();
+    };
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keyup", async (e) => {
+      if (e.key === "Enter") {
+        await sendMessage();
+      }
+    });
+    usernameInput.addEventListener("keyup", async (e) => {
+      if (e.key === "Enter") {
+        await sendMessage();
+      }
     });
   }
 });

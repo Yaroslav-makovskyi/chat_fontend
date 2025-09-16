@@ -1,6 +1,12 @@
-declare const uuidv4 : () => string;
+declare const uuidv4: () => string;
 
-document.addEventListener("DOMContentLoaded", async() => {
+type MeessageObject = {
+  id: string;
+  username: string;
+  message: string
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
   const chatContainer = document.getElementById("chatContainer");
   const usernameInput = document.getElementById(
     "usernameInput",
@@ -11,8 +17,14 @@ document.addEventListener("DOMContentLoaded", async() => {
   const sendBtn = document.getElementById("sendBtn");
 
   if (chatContainer && usernameInput && messageInput && sendBtn) {
-    const hideChatContainer = async() => {
-      chatContainer.style.visibility = "hidden"
+    const isOwnMessage = (mesObj: MeessageObject) => {
+      const myIdsStr = localStorage.getItem("myIds");
+      const myIds = myIdsStr ? JSON.parse(myIdsStr) : [];
+      return myIds.includes(mesObj.id);
+    };
+
+    const hideChatContainer = async () => {
+      chatContainer.style.visibility = "hidden";
     };
 
     const showChatContainer = async () => {
@@ -22,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     const isAtDown = () =>
       chatContainer.scrollTop === chatContainer.scrollHeight;
 
-    const scrollToDown = async() => {
+    const scrollToDown = async () => {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     };
 
@@ -30,12 +42,20 @@ document.addEventListener("DOMContentLoaded", async() => {
       const res = await fetch("http://46.101.114.148:3000/chat/messages");
       const json = await res.json();
       chatContainer.innerHTML = json
-        .map((mesObj: any) => {
-          return `
-          <div class="flex items-start space-x-3">
-                  <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span class="text-white text-sm font-medium">М</span>
+        .map((mesObj: MeessageObject) => {
+          return isOwnMessage(mesObj)
+            ? `<div class="flex items-start space-x-3 justify-end">
+                  <div class="flex-1 flex flex-col items-end">
+                      <div class="flex items-center space-x-2 mb-1">
+                          <span class="text-xs text-gray-500"></span>
+                          <span class="font-medium text-gray-800">${mesObj.username}</span>
+                      </div>
+                      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl rounded-tr-md px-4 py-2 max-w-md">
+                          <p class="text-white">${mesObj.message}</p>
+                      </div>
                   </div>
+              </div>`
+            : `<div class="flex items-start space-x-3">
                   <div class="flex-1">
                       <div class="flex items-center space-x-2 mb-1">
                           <span class="font-medium text-gray-800">${mesObj.username}</span>
@@ -49,11 +69,11 @@ document.addEventListener("DOMContentLoaded", async() => {
         })
         .join("\n");
 
-        await new Promise(resolve => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
 
-        if (isAtDown()) {
-          scrollToDown()
-        }
+      if (isAtDown()) {
+        scrollToDown();
+      }
     };
 
     await hideChatContainer();
@@ -67,13 +87,20 @@ document.addEventListener("DOMContentLoaded", async() => {
       if (!usernameInput.value || !messageInput.value) {
         return;
       }
+
+      const id = uuidv4();
+      const myIdsStr = localStorage.getItem("myIds");
+      const myIds = myIdsStr ? JSON.parse(myIdsStr) : [];
+      myIds.push(id);
+      localStorage.setItem("myIds", JSON.stringify(myIds));
+
       await fetch("http://46.101.114.148:3000/chat/message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: uuidv4(),
+          id,
           username: usernameInput.value,
           message: messageInput.value,
         }),

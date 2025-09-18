@@ -1,10 +1,10 @@
-declare const uuidv4: () => string;
+import { v4 as uuidv4 } from "uuid";
 
 type MeessageObject = {
   id: string;
   username: string;
-  message: string
-}
+  message: string;
+};
 
 document.addEventListener("DOMContentLoaded", async () => {
   const chatContainer = document.getElementById("chatContainer");

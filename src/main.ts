@@ -1,3 +1,15 @@
+import { ChatController } from "./controllers/ChatController";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const chatController = new ChatController();
+});
+
+
+
+
+
+
+
 import { v4 as uuidv4 } from "uuid";
 
 type MeessageObject = {

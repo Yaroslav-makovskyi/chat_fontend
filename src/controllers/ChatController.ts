@@ -1,12 +1,15 @@
-import { ChatModel, MessageObject } from "../models/ChatModel";
+import { MessageObject } from "../models/ChatModel";
+import { ChatSocketModel } from "../models/ChatSocketModel";
 import { ChatView } from "../views/ChatView";
 
 export class ChatController {
-  private model: ChatModel;
+  private model: ChatSocketModel;
   private view: ChatView;
 
   constructor() {
-    this.model = new ChatModel();
+    this.model = new ChatSocketModel(
+      process.env.HOST || "http://localhost:3000"
+    );
     this.view = new ChatView();
 
     this.view.onReady(() => {
@@ -24,12 +27,25 @@ export class ChatController {
       this.model.sendMessage(message);
     });
 
-    setInterval(this.loadChat, 1000);
+    // setInterval(this.loadChat, 1000);
+    this.model.onNewMessage(async (message: MessageObject) => {
+      const isAtDown = this.view.isAtDown();
+
+      await this.displayMessages([message]);
+
+      if (isAtDown) {
+        this.view.scrollToDown();
+      }
+    });
   };
 
   private loadChat = async () => {
     const messages = await this.model.loadMessages();
     this.view.clearMessages();
+    await this.displayMessages(messages);
+  };
+
+  private displayMessages = async (messages: MessageObject[]) => {
     messages.forEach((message) => {
       if (this.model.isOwnMessage(message)) {
         this.view.displayOwnMessage(message);
@@ -39,9 +55,5 @@ export class ChatController {
     });
 
     await this.view.waitAnimationFrame();
-
-    if (this.view.isAtDown()) {
-      this.view.scrollToDown();
-    }
   };
 }
